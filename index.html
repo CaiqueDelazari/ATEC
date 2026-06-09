@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ATCE – Cadeiras para Escritório | Agudos e Bauru</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #f5a800;
+      --black: #111111;
+      --dark: #181818;
+      --white: #ffffff;
+      --green: #25d366;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      overflow-x: hidden;
+      padding-top: 64px;
+    }
+
+    /* ══════════════════════════════════════
+       NAVBAR FIXA
+    ══════════════════════════════════════ */
+    .topnav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      padding: 0 40px;
+      background: rgba(17,17,17,.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 2px solid var(--gold);
+      transition: height .3s, padding .3s, background .3s;
+    }
+
+    .topnav.scrolled {
+      height: 50px;
+      background: rgba(10,10,10,.97);
+    }
+
+    .topnav img {
+      height: 40px;
+      width: auto;
+      display: block;
+      transition: height .3s;
+    }
+
+    .topnav.scrolled img { height: 30px; }
+
+    @media (max-width: 700px) {
+      .topnav { padding: 0 20px; height: 54px; }
+      .topnav img { height: 32px; }
+      .topnav.scrolled { height: 44px; }
+      .topnav.scrolled img { height: 26px; }
+      body { padding-top: 54px; }
+    }
+
+    /* ══════════════════════════════════════
+       HERO — flyer real como imagem base
+    ══════════════════════════════════════ */
+    .hero-flyer {
+      position: relative;
+      width: 100%;
+      line-height: 0; /* remove espaço abaixo da img */
+    }
+
+    .hero-flyer img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /*
+      Overlays que cobrem os textos indesejados.
+      Posições em % relativas ao tamanho do flyer (1270×636 px original).
+
+      "NOVAS E REFORMADAS" — faixa branca no centro-esquerdo
+      Fica aproximadamente em:
+        top: 36.5%  height: 8%
+        left: 0%    width: 44%
+
+      "ANTES E DEPOIS" — bloco inferior esquerdo com duas fotos
+        top: 80%    height: 20%
+        left: 0%    width: 20%
+    */
+
+
+    /* ══════════════════════════════════════
+       SEÇÃO CTA — abaixo do flyer
+    ══════════════════════════════════════ */
+    .cta-section {
+      background: var(--dark);
+      padding: 72px 48px;
+      text-align: center;
+      border-top: 4px solid var(--gold);
+    }
+
+    .cta-section h2 {
+      font-size: clamp(1.8rem, 3.5vw, 3rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .cta-section h2 em { font-style: normal; color: var(--gold); }
+
+    .cta-section p {
+      color: #999;
+      max-width: 540px;
+      margin: 0 auto 36px;
+      font-size: .95rem;
+    }
+
+    .btn-whatsapp {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--green);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 18px 36px;
+      border-radius: 8px;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(37,211,102,.4);
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .btn-whatsapp:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(37,211,102,.55);
+    }
+
+    .btn-whatsapp svg { width: 24px; height: 24px; flex-shrink: 0; }
+
+    .phones-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .phones-row a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: .85rem;
+      background: #222;
+      padding: 12px 20px;
+      border-radius: 8px;
+      transition: background .2s;
+    }
+
+    .phones-row a:hover { background: #2e2e2e; }
+    .phones-row a svg { width: 17px; height: 17px; color: var(--gold); }
+
+    /* ══════════════════════════════════════
+       CATÁLOGO — ABAS
+    ══════════════════════════════════════ */
+    .catalog {
+      background: var(--black);
+      padding: 72px 48px;
+      border-top: 1px solid #222;
+    }
+
+    .catalog-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .catalog .section-label { margin-bottom: 10px; }
+    .catalog .section-title { margin-bottom: 36px; }
+
+    .tabs-nav {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 44px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid #2a2a2a;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .tab-btn {
+      background: #1a1a1a;
+      color: #888;
+      border: none;
+      padding: 14px 40px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: .85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+
+    .tab-btn:first-child { border-right: 2px solid #2a2a2a; }
+
+    .tab-btn.active {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .product-card {
+      background: var(--dark);
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #242424;
+      transition: transform .25s, box-shadow .25s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 36px rgba(0,0,0,.5);
+    }
+
+    .product-card .pc-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      background: #222;
+    }
+
+    .pc-img-placeholder {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+    }
+
+    .pc-img-placeholder svg { width: 56px; height: 56px; }
+
+    .product-card .pc-body {
+      padding: 20px 20px 24px;
+    }
+
+    .pc-brand {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .pc-name {
+      font-size: 1rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .pc-desc {
+      font-size: .78rem;
+      color: #888;
+      line-height: 1.55;
+      margin-bottom: 18px;
+    }
+
+    .pc-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: .75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 10px 18px;
+      border-radius: 7px;
+      text-decoration: none;
+      transition: opacity .2s;
+    }
+
+    .pc-cta:hover { opacity: .85; }
+    .pc-cta svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ══════════════════════════════════════
+       DIFERENCIAIS
+    ══════════════════════════════════════ */
+    .diffs {
+      background: var(--black);
+      padding: 64px 48px;
+    }
+
+    .diffs-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      text-align: center;
+      color: var(--gold);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 44px;
+    }
+
+    .diffs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .diff-card {
+      background: var(--dark);
+      border-radius: 12px;
+      padding: 32px 24px;
+      text-align: center;
+      border-bottom: 4px solid var(--gold);
+      transition: transform .25s;
+    }
+
+    .diff-card:hover { transform: translateY(-5px); }
+
+    .diff-card .dc-ic {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(245,168,0,.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .diff-card .dc-ic svg { width: 26px; height: 26px; color: var(--gold); }
+    .diff-card h3 { font-size: .9rem; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; }
+    .diff-card p  { font-size: .78rem; color: #999; line-height: 1.55; }
+
+    /* ══════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════ */
+    footer {
+      background: #0a0a0a;
+      padding: 28px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      border-top: 3px solid var(--gold);
+    }
+
+    .f-brand { font-size: 1.2rem; font-weight: 900; letter-spacing: .12em; color: var(--gold); }
+    .f-addr  { font-size: .75rem; color: #666; margin-top: 4px; }
+    .f-right { text-align: right; font-size: .75rem; color: #555; }
+
+    /* ══════════════════════════════════════
+       BOTÃO ADMIN
+    ══════════════════════════════════════ */
+    .admin-gear {
+      position: fixed;
+      bottom: 28px;
+      left: 28px;
+      z-index: 999;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #1a1a1a;
+      border: 2px solid #2a2a2a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color .2s, transform .3s, background .2s;
+    }
+
+    .admin-gear:hover {
+      border-color: var(--gold);
+      background: #222;
+    }
+
+    .admin-gear:hover svg {
+      transform: rotate(60deg);
+      color: var(--gold);
+    }
+
+    .admin-gear svg {
+      width: 20px;
+      height: 20px;
+      color: #555;
+      transition: transform .4s, color .2s;
+    }
+
+    /* ══════════════════════════════════════
+       FLOAT WHATSAPP
+    ══════════════════════════════════════ */
+    .float-wa {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 999;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,.5);
+      text-decoration: none;
+      transition: transform .2s;
+    }
+
+    .float-wa:hover { transform: scale(1.12); }
+    .float-wa svg { width: 28px; height: 28px; color: #fff; }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
+    @media (max-width: 700px) {
+      .cta-section { padding: 48px 24px; }
+      .catalog { padding: 48px 24px; }
+      .diffs { padding: 48px 24px; }
+      .diffs-grid { grid-template-columns: 1fr; }
+      .products-grid { grid-template-columns: 1fr; }
+      .tab-btn { padding: 12px 28px; font-size: .78rem; }
+      footer { flex-direction: column; text-align: center; }
+      .f-right { text-align: center; }
+    }
+    /* ══════════════════════════════════════
+       ADMIN PANEL
+    ══════════════════════════════════════ */
+    #admin-panel {
+      position: fixed; inset: 0; z-index: 9999;
+      display: none; align-items: center; justify-content: center;
+      background: rgba(0,0,0,.88); backdrop-filter: blur(10px); padding: 1.5rem;
+    }
+    #admin-panel.open { display: flex; }
+
+    .admin-box {
+      background: var(--dark); border: 1px solid #2a2a2a; border-radius: 20px;
+      width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; padding: 2rem;
+    }
+    .admin-box h2 { font-size: 1.4rem; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .25rem; }
+    .admin-box h2 em { font-style: normal; color: var(--gold); }
+    .admin-subtitle { font-size: .82rem; color: #666; margin-bottom: 1.75rem; }
+
+    .admin-pwd-screen { display: flex; flex-direction: column; gap: 1rem; text-align: center; padding: 1rem 0; }
+    .admin-pwd-screen > p { color: #888; font-size: .9rem; }
+
+    .admin-tabs-row { display: flex; gap: .5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .admin-t {
+      padding: .4rem 1rem; border-radius: 100px; border: 1px solid #2a2a2a;
+      background: transparent; color: #666; font-size: .78rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
+      transition: all .2s; font-family: 'Montserrat', sans-serif;
+    }
+    .admin-t.active, .admin-t:hover { background: var(--gold); border-color: var(--gold); color: var(--black); }
+
+    .admin-form { display: flex; flex-direction: column; gap: 1rem; }
+    .admin-field label { display: block; font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #666; margin-bottom: .4rem; }
+    .admin-field input, .admin-field textarea {
+      width: 100%; background: #111; border: 1px solid #2a2a2a; border-radius: 8px;
+      padding: .7rem 1rem; color: var(--white); font-size: .88rem;
+      font-family: 'Montserrat', sans-serif; outline: none; transition: border-color .2s;
+    }
+    .admin-field input:focus, .admin-field textarea:focus { border-color: var(--gold); }
+    .admin-field textarea { resize: vertical; min-height: 70px; }
+
+    .admin-photos-row { display: flex; gap: .6rem; }
+    .admin-photo-slot {
+      flex: 1; aspect-ratio: 1; background: #111; border: 1.5px dashed #2a2a2a;
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; position: relative; overflow: hidden; transition: border-color .2s;
+    }
+    .admin-photo-slot:hover { border-color: var(--gold); }
+    .admin-photo-slot.filled { border-style: solid; border-color: var(--gold); }
+    .pslot-ph { display: flex; flex-direction: column; align-items: center; gap: .3rem; pointer-events: none; }
+    .pslot-ph span { font-size: .6rem; color: #555; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .pslot-preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: none; }
+
+    .admin-actions { display: flex; gap: .75rem; margin-top: .5rem; }
+    .admin-save {
+      flex: 1; background: var(--gold); color: var(--black); border: none; border-radius: 8px;
+      padding: .8rem; font-weight: 800; font-size: .88rem; font-family: 'Montserrat', sans-serif;
+      letter-spacing: .06em; text-transform: uppercase; cursor: pointer; transition: background .2s;
+    }
+    .admin-save:hover { background: #ffc224; }
+    .admin-close {
+      background: #1a1a1a; color: #666; border: 1px solid #2a2a2a; border-radius: 8px;
+      padding: .8rem 1.2rem; font-size: .88rem; font-family: 'Montserrat', sans-serif;
+      cursor: pointer; transition: all .2s;
+    }
+    .admin-close:hover { color: var(--white); border-color: #555; }
+
+    .admin-divider { border: none; border-top: 1px solid #2a2a2a; margin: 1.5rem 0; }
+
+    .admin-list { display: flex; flex-direction: column; gap: .6rem; }
+    .admin-item {
+      display: flex; align-items: center; gap: .75rem; background: #111;
+      border: 1px solid #2a2a2a; border-radius: 10px; padding: .75rem 1rem;
+    }
+    .admin-item img { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; background: #1a1a1a; }
+    .admin-item-info { flex: 1; min-width: 0; }
+    .admin-item-name { font-weight: 700; font-size: .88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .admin-item-brand { font-size: .72rem; color: var(--gold); }
+    .admin-del {
+      background: #ff4444; border: none; color: #fff; border-radius: 6px;
+      padding: .4rem .8rem; font-size: .78rem; font-weight: 700; cursor: pointer;
+      font-family: 'Montserrat', sans-serif; transition: all .2s; white-space: nowrap;
+    }
+    .admin-del:hover { background: #cc0000; transform: scale(1.05); }
+
+    .pwd-error { color: #ff4444; font-size: .8rem; display: none; }
+
+    .catalog-empty { grid-column: 1 / -1; text-align: center; padding: 48px 24px; color: #444; font-size: .85rem; line-height: 1.7; }
+    .catalog-empty svg { display: block; margin: 0 auto 12px; width: 48px; height: 48px; opacity: .2; }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+<!-- ══ NAVBAR FIXA ════════════════════════════════════════ -->
+<nav class="topnav" id="topnav">
+  <img src="logo.png" alt="ATCE – Cadeiras para Escritório" />
+</nav>
+
+<!-- ══ HERO: FLYER COM OVERLAYS ══════════════════════════ -->
+<div class="hero-flyer">
+  <img src="Flayer.png" alt="ATCE – Cadeiras para Escritório" />
+</div>
+
+<!-- ══ CTA ════════════════════════════════════════════════ -->
+<section class="cta-section">
+  <h2>Solicite um <em>orçamento</em> agora</h2>
+  <p>Atendimento rápido, personalizado e sem compromisso. Fale diretamente pelo WhatsApp.</p>
+
+  <a href="https://wa.me/5514991410373?text=Ol%C3%A1!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento." class="btn-whatsapp" target="_blank">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.113.552 4.094 1.512 5.818L.057 23.882l6.22-1.63A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.816 9.816 0 0 1-5.011-1.376l-.36-.214-3.712.974 1-3.614-.235-.373A9.806 9.806 0 0 1 2.182 12C2.182 6.578 6.578 2.182 12 2.182S21.818 6.578 21.818 12 17.422 21.818 12 21.818z"/></svg>
+    Falar pelo WhatsApp
+  </a>
+
+  <div class="phones-row">
+    <a href="tel:+5514991410373">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.29h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      14 99141-0373
+    </a>
+    <a href="tel:+5514991279090">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.29h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      14 99127-1990
+    </a>
+    <a href="tel:+5514991729038">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.29h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      14 99172-9038
+    </a>
+  </div>
+</section>
+
+<!-- ══ CATÁLOGO ═══════════════════════════════════════════ -->
+<section class="catalog">
+  <div class="catalog-inner">
+    <p class="section-label">Nossos produtos</p>
+    <h2 class="section-title">Conheça o Catálogo</h2>
+
+    <!-- Navegação de abas -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="switchTab('cadeiras', this)">Cadeiras</button>
+      <button class="tab-btn"        onclick="switchTab('componentes', this)">Componentes</button>
+    </div>
+
+    <!-- ABA: CADEIRAS -->
+    <div class="tab-panel active" id="tab-cadeiras">
+      <div class="products-grid" id="grid-cadeiras"></div>
+    </div>
+
+    <!-- ABA: COMPONENTES -->
+    <div class="tab-panel" id="tab-componentes">
+      <div class="products-grid" id="grid-componentes"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ DIFERENCIAIS ═══════════════════════════════════════ -->
+<section class="diffs">
+  <div class="diffs-inner">
+    <p class="section-label">Nossos pilares</p>
+    <h2 class="section-title">O que nos move</h2>
+
+    <div class="diffs-grid">
+
+      <div class="diff-card">
+        <div class="dc-ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h3>Qualidade que você sente</h3>
+        <p>Materiais e acabamentos selecionados que você percebe no primeiro momento de uso.</p>
+      </div>
+
+      <div class="diff-card">
+        <div class="dc-ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8 14s-4 1-4 5h16c0-4-4-5-4-5"/></svg>
+        </div>
+        <h3>Conforto que você merece</h3>
+        <p>Ergonomia e suporte pensados para longas jornadas de trabalho com mais bem-estar.</p>
+      </div>
+
+      <div class="diff-card">
+        <div class="dc-ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Compromisso que você pode confiar</h3>
+        <p>Transparência, prazo e serviço honesto. Nossa reputação foi construída assim.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ════════════════════════════════════════════ -->
+<footer>
+  <div>
+    <img src="logo.png" alt="ATCE" style="height:64px;width:auto;display:block;margin-bottom:8px;" />
+    <div class="f-addr">Rua Lourival dos Santos, 254 · Sta Cândida · Agudos/SP</div>
+  </div>
+  <div class="f-right">
+    Atendemos Agudos, Bauru e Região<br>
+    <span style="color:#333;">&copy; 2025 ATCE. Todos os direitos reservados.</span>
+  </div>
+</footer>
+
+<!-- botão engrenagem admin -->
+<button class="admin-gear" onclick="openAdmin()" title="Gerenciar site">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+  </svg>
+</button>
+
+<!-- ══ ADMIN PANEL ════════════════════════════════════════ -->
+<div id="admin-panel">
+  <div class="admin-box">
+
+    <!-- TELA DE SENHA -->
+    <div id="admin-lock">
+      <h2>Gerenciar <em>Site</em></h2>
+      <p class="admin-subtitle">Área exclusiva ATCE</p>
+      <div class="admin-pwd-screen">
+        <p>Digite a senha para acessar o painel</p>
+        <div class="admin-field">
+          <input type="password" id="admin-pwd" placeholder="Senha..." onkeydown="if(event.key==='Enter') checkPwd()" />
+        </div>
+        <div class="admin-actions">
+          <button class="admin-save" onclick="checkPwd()">Entrar</button>
+          <button class="admin-close" onclick="closeAdmin()">Cancelar</button>
+        </div>
+        <p class="pwd-error" id="pwd-error">Senha incorreta.</p>
+      </div>
+    </div>
+
+    <!-- PAINEL PRINCIPAL -->
+    <div id="admin-main" style="display:none">
+      <h2>Gerenciar <em>Catálogo</em></h2>
+      <p class="admin-subtitle">Adicione ou remova produtos do site</p>
+
+      <div class="admin-tabs-row">
+        <button class="admin-t active" onclick="selectSection('cadeiras', this)">Cadeiras</button>
+        <button class="admin-t" onclick="selectSection('componentes', this)">Componentes</button>
+      </div>
+
+      <div class="admin-form">
+        <div class="admin-field">
+          <label>Fotos do Produto (até 3)</label>
+          <div class="admin-photos-row">
+            <div class="admin-photo-slot" id="pslot-0" onclick="document.getElementById('pimg-0').click()">
+              <input type="file" id="pimg-0" accept="image/*" style="display:none" onchange="previewSlot(this,0)" />
+              <img class="pslot-preview" id="pprev-0" />
+              <div class="pslot-ph" id="pph-0"><div style="font-size:1.4rem">📷</div><span>Foto 1</span></div>
+            </div>
+            <div class="admin-photo-slot" id="pslot-1" onclick="document.getElementById('pimg-1').click()">
+              <input type="file" id="pimg-1" accept="image/*" style="display:none" onchange="previewSlot(this,1)" />
+              <img class="pslot-preview" id="pprev-1" />
+              <div class="pslot-ph" id="pph-1"><div style="font-size:1.4rem">📷</div><span>Foto 2</span></div>
+            </div>
+            <div class="admin-photo-slot" id="pslot-2" onclick="document.getElementById('pimg-2').click()">
+              <input type="file" id="pimg-2" accept="image/*" style="display:none" onchange="previewSlot(this,2)" />
+              <img class="pslot-preview" id="pprev-2" />
+              <div class="pslot-ph" id="pph-2"><div style="font-size:1.4rem">📷</div><span>Foto 3</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="admin-field">
+          <label>Marca</label>
+          <input type="text" id="p-brand" placeholder="Ex: Giroflex, Cavaletti..." />
+        </div>
+        <div class="admin-field">
+          <label>Nome do Produto</label>
+          <input type="text" id="p-name" placeholder="Ex: Cadeira Executiva Plus..." />
+        </div>
+        <div class="admin-field">
+          <label>Descrição</label>
+          <textarea id="p-desc" placeholder="Material, regulagens, diferenciais..."></textarea>
+        </div>
+        <div class="admin-actions">
+          <button class="admin-save" onclick="addProduct()">+ Adicionar</button>
+          <button class="admin-close" onclick="closeAdmin()">Fechar</button>
+        </div>
+      </div>
+
+      <hr class="admin-divider" />
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#555;margin-bottom:.75rem;">Produtos nesta seção</div>
+      <div class="admin-list" id="admin-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- botão flutuante WhatsApp -->
+<a href="https://wa.me/5514991410373?text=Ol%C3%A1!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento." class="float-wa" target="_blank" title="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.113.552 4.094 1.512 5.818L.057 23.882l6.22-1.63A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.816 9.816 0 0 1-5.011-1.376l-.36-.214-3.712.974 1-3.614-.235-.373A9.806 9.806 0 0 1 2.182 12C2.182 6.578 6.578 2.182 12 2.182S21.818 6.578 21.818 12 17.422 21.818 12 21.818z"/></svg>
+</a>
+
+
+<script>
+  // ─── FIREBASE CONFIG ─────────────────────────────────────────
+  // Crie um projeto em https://console.firebase.google.com
+  // e substitua os valores abaixo pelas suas credenciais reais.
+  firebase.initializeApp({
+    apiKey:            "AIzaSyBCQlqBVCqY2qBxrpp_y4BQALEH9MbhXJ0",
+    authDomain:        "atce-e719a.firebaseapp.com",
+    projectId:         "atce-e719a",
+    storageBucket:     "atce-e719a.firebasestorage.app",
+    messagingSenderId: "664563017123",
+    appId:             "1:664563017123:web:6169561a64f9e31f2ae616"
+  });
+  const db = firebase.firestore();
+
+  // ─── ADMIN ───────────────────────────────────────────────────
+  const ADMIN_PASSWORD = 'atce2025';
+  let currentSection = 'cadeiras';
+  let uploadedImages = [null, null, null];
+  const _cache = { cadeiras: [], componentes: [] };
+
+  function openAdmin() {
+    document.getElementById('admin-panel').classList.add('open');
+    document.getElementById('admin-pwd').value = '';
+    document.getElementById('pwd-error').style.display = 'none';
+    document.getElementById('admin-lock').style.display = 'block';
+    document.getElementById('admin-main').style.display = 'none';
+    setTimeout(() => document.getElementById('admin-pwd').focus(), 100);
+  }
+
+  function closeAdmin() {
+    document.getElementById('admin-panel').classList.remove('open');
+  }
+
+  function checkPwd() {
+    if (document.getElementById('admin-pwd').value === ADMIN_PASSWORD) {
+      document.getElementById('admin-lock').style.display = 'none';
+      document.getElementById('admin-main').style.display = 'block';
+      renderAdminList();
+    } else {
+      document.getElementById('pwd-error').style.display = 'block';
+    }
+  }
+
+  function selectSection(section, btn) {
+    currentSection = section;
+    document.querySelectorAll('.admin-t').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    renderAdminList();
+  }
+
+  function compressImage(file, maxSize = 800, quality = 0.75) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let { width, height } = img;
+          if (width > height && width > maxSize) { height = Math.round(height * maxSize / width); width = maxSize; }
+          else if (height > maxSize) { width = Math.round(width * maxSize / height); height = maxSize; }
+          canvas.width = width; canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function previewSlot(input, idx) {
+    const file = input.files[0];
+    if (!file) return;
+    try {
+      const compressed = await compressImage(file);
+      uploadedImages[idx] = compressed;
+      const prev = document.getElementById('pprev-' + idx);
+      prev.src = compressed;
+      prev.style.display = 'block';
+      document.getElementById('pph-' + idx).style.display = 'none';
+      document.getElementById('pslot-' + idx).classList.add('filled');
+    } catch (err) {
+      alert('Erro ao processar imagem: ' + err.message);
+    }
+  }
+
+  function saveProducts(section, arr) {
+    _cache[section] = arr;
+    db.collection('catalogo').doc(section).set({ products: arr })
+      .catch(err => alert('Erro ao salvar no Firebase: ' + err.message));
+  }
+
+  function addProduct() {
+    const name = document.getElementById('p-name').value.trim();
+    if (!name) { alert('Digite o nome do produto.'); return; }
+    const product = {
+      id: Date.now(),
+      brand: document.getElementById('p-brand').value.trim(),
+      name,
+      desc: document.getElementById('p-desc').value.trim(),
+      imgs: uploadedImages.filter(Boolean)
+    };
+    saveProducts(currentSection, [..._cache[currentSection], product]);
+
+    document.getElementById('p-brand').value = '';
+    document.getElementById('p-name').value = '';
+    document.getElementById('p-desc').value = '';
+    uploadedImages = [null, null, null];
+    for (let i = 0; i < 3; i++) {
+      const prev = document.getElementById('pprev-' + i);
+      prev.src = ''; prev.style.display = 'none';
+      document.getElementById('pph-' + i).style.display = 'flex';
+      document.getElementById('pimg-' + i).value = '';
+      document.getElementById('pslot-' + i).classList.remove('filled');
+    }
+    renderAdminList();
+  }
+
+  function deleteProduct(section, id) {
+    if (!confirm('Remover este produto?')) return;
+    saveProducts(section, _cache[section].filter(p => p.id !== id));
+    renderAdminList();
+  }
+
+  function renderAdminList() {
+    const list = document.getElementById('admin-list');
+    const arr = _cache[currentSection];
+    if (!arr.length) {
+      list.innerHTML = '<p style="color:#555;font-size:.85rem;">Nenhum produto nesta seção.</p>';
+      return;
+    }
+    list.innerHTML = arr.map(p => `
+      <div class="admin-item">
+        ${p.imgs && p.imgs[0]
+          ? `<img src="${p.imgs[0]}" alt="${p.name}" />`
+          : '<div style="width:48px;height:48px;background:#1a1a1a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🪑</div>'}
+        <div class="admin-item-info">
+          <div class="admin-item-brand">${p.brand || '—'}</div>
+          <div class="admin-item-name">${p.name}</div>
+        </div>
+        <button class="admin-del" onclick="deleteProduct('${currentSection}', ${p.id})">✕ Remover</button>
+      </div>`).join('');
+  }
+
+  const WA_LINK = 'https://wa.me/5514991410373?text=Ol%C3%A1!%20Tenho%20interesse%20em%20um%20produto.';
+  const WA_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.113.552 4.094 1.512 5.818L.057 23.882l6.22-1.63A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.816 9.816 0 0 1-5.011-1.376l-.36-.214-3.712.974 1-3.614-.235-.373A9.806 9.806 0 0 1 2.182 12C2.182 6.578 6.578 2.182 12 2.182S21.818 6.578 21.818 12 17.422 21.818 12 21.818z"/></svg>';
+
+  function renderSection(section) {
+    const grid = document.getElementById('grid-' + section);
+    if (!grid) return;
+    const arr = _cache[section];
+    if (!arr.length) {
+      grid.innerHTML = `<div class="catalog-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 2v6M18 2v6M6 8h12M5 22h14M6 8v7a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V8M9 19v3M15 19v3"/></svg>
+        Nenhum produto cadastrado.<br>
+        <small style="color:#333">Use <strong style="color:var(--gold)">Ctrl+Shift+A</strong> para acessar o painel.</small>
+      </div>`;
+      return;
+    }
+    window._pimgs = window._pimgs || {};
+    grid.innerHTML = '';
+    arr.forEach(p => {
+      const imgs = p.imgs && p.imgs.length ? p.imgs : [];
+      window._pimgs[p.id] = imgs;
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        ${imgs.length
+          ? `<div style="position:relative;aspect-ratio:4/3;overflow:hidden;background:#1a1a1a;">
+               <img src="${imgs[0]}" id="pimg-main-${p.id}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .25s;" alt="${p.name}" />
+               ${imgs.length > 1 ? `<div style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:2;">
+                 ${imgs.map((_, i) => `<div onclick="switchPImg(${p.id},${i})" data-pid="${p.id}" data-i="${i}" style="width:${i===0?'32px':'22px'};height:3px;border-radius:2px;background:${i===0?'var(--gold)':'rgba(255,255,255,.3)'};cursor:pointer;transition:all .2s;"></div>`).join('')}
+               </div>` : ''}
+             </div>`
+          : `<div class="pc-img-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 2v6M18 2v6M6 8h12M5 22h14M6 8v7a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V8M9 19v3M15 19v3"/></svg></div>`
+        }
+        <div class="pc-body">
+          ${p.brand ? `<div class="pc-brand">${p.brand}</div>` : ''}
+          <div class="pc-name">${p.name}</div>
+          ${p.desc ? `<p class="pc-desc">${p.desc}</p>` : ''}
+          <a href="${WA_LINK}" class="pc-cta" target="_blank">${WA_SVG} Pedir orçamento</a>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function switchPImg(pid, idx) {
+    const imgs = (window._pimgs || {})[pid];
+    if (!imgs || !imgs[idx]) return;
+    const mainImg = document.getElementById('pimg-main-' + pid);
+    if (mainImg) {
+      mainImg.style.opacity = '0';
+      setTimeout(() => { mainImg.src = imgs[idx]; mainImg.style.opacity = '1'; }, 200);
+    }
+    document.querySelectorAll(`[data-pid="${pid}"]`).forEach((d, i) => {
+      d.style.width = i === idx ? '32px' : '22px';
+      d.style.background = i === idx ? 'var(--gold)' : 'rgba(255,255,255,.3)';
+    });
+  }
+
+  // ─── ABAS ────────────────────────────────────────────────────
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    if (btn) btn.classList.add('active');
+  }
+
+  // ─── SYNC FIRESTORE EM TEMPO REAL ────────────────────────────
+  ['cadeiras', 'componentes'].forEach(section => {
+    db.collection('catalogo').doc(section).onSnapshot(doc => {
+      _cache[section] = doc.exists ? (doc.data().products || []) : [];
+      renderSection(section);
+      if (document.getElementById('admin-main').style.display !== 'none') renderAdminList();
+    }, () => {
+      _cache[section] = JSON.parse(localStorage.getItem('atce_' + section) || '[]');
+      renderSection(section);
+    });
+  });
+
+  // ─── FECHAR AO CLICAR FORA ───────────────────────────────────
+  document.getElementById('admin-panel').addEventListener('click', function(e) {
+    if (e.target === this) closeAdmin();
+  });
+
+  // ─── ATALHO: Ctrl+Shift+A ────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.shiftKey && e.key === 'A') { e.preventDefault(); openAdmin(); }
+  });
+
+  // ─── NAVBAR SCROLL ───────────────────────────────────────────
+  const topnav = document.getElementById('topnav');
+  window.addEventListener('scroll', () => {
+    topnav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+</script>
+</body>
+</html>

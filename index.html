@@ -742,6 +742,7 @@
   </style>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -947,12 +948,15 @@
       <h2>Gerenciar <em>Site</em></h2>
       <p class="admin-subtitle">Área exclusiva ATCE</p>
       <div class="admin-pwd-screen">
-        <p>Digite a senha para acessar o painel</p>
+        <p>Entre com seu e-mail e senha para acessar o painel</p>
         <div class="admin-field">
-          <input type="password" id="admin-pwd" placeholder="Senha..." onkeydown="if(event.key==='Enter') checkPwd()" />
+          <input type="email" id="admin-email" placeholder="E-mail..." autocomplete="username" onkeydown="if(event.key==='Enter') document.getElementById('admin-pwd').focus()" />
+        </div>
+        <div class="admin-field">
+          <input type="password" id="admin-pwd" placeholder="Senha..." autocomplete="current-password" onkeydown="if(event.key==='Enter') checkPwd()" />
         </div>
         <div class="admin-actions">
-          <button class="admin-save" onclick="checkPwd()">Entrar</button>
+          <button class="admin-save" id="admin-login-btn" onclick="checkPwd()">Entrar</button>
           <button class="admin-close" onclick="closeAdmin()">Cancelar</button>
         </div>
         <p class="pwd-error" id="pwd-error">Senha incorreta.</p>
@@ -1003,8 +1007,9 @@
           <textarea id="p-desc" placeholder="Material, regulagens, diferenciais..."></textarea>
         </div>
         <div class="admin-actions">
-          <button class="admin-save" onclick="addProduct()">+ Adicionar</button>
+          <button class="admin-save" id="admin-add-btn" onclick="addProduct()">+ Adicionar</button>
           <button class="admin-close" onclick="closeAdmin()">Fechar</button>
+          <button class="admin-close" onclick="logoutAdmin()">Sair</button>
         </div>
       </div>
 
@@ -1035,34 +1040,65 @@
     appId:             "1:664563017123:web:6169561a64f9e31f2ae616"
   });
   const db = firebase.firestore();
+  const auth = firebase.auth();
 
   // ─── ADMIN ───────────────────────────────────────────────────
-  const ADMIN_PASSWORD = 'atce2025';
   let currentSection = 'cadeiras';
   let uploadedImages = [null, null, null];
   const _cache = { cadeiras: [], componentes: [] };
 
   function openAdmin() {
     document.getElementById('admin-panel').classList.add('open');
-    document.getElementById('admin-pwd').value = '';
     document.getElementById('pwd-error').style.display = 'none';
+    if (auth.currentUser) { showAdminMain(); return; }
+    document.getElementById('admin-pwd').value = '';
     document.getElementById('admin-lock').style.display = 'block';
     document.getElementById('admin-main').style.display = 'none';
-    setTimeout(() => document.getElementById('admin-pwd').focus(), 100);
+    setTimeout(() => document.getElementById('admin-email').focus(), 100);
   }
 
   function closeAdmin() {
     document.getElementById('admin-panel').classList.remove('open');
   }
 
-  function checkPwd() {
-    if (document.getElementById('admin-pwd').value === ADMIN_PASSWORD) {
-      document.getElementById('admin-lock').style.display = 'none';
-      document.getElementById('admin-main').style.display = 'block';
-      renderAdminList();
-    } else {
-      document.getElementById('pwd-error').style.display = 'block';
+  function showAdminMain() {
+    document.getElementById('admin-lock').style.display = 'none';
+    document.getElementById('admin-main').style.display = 'block';
+    renderAdminList();
+  }
+
+  function loginError(msg) {
+    const el = document.getElementById('pwd-error');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  async function checkPwd() {
+    const email = document.getElementById('admin-email').value.trim();
+    const pwd = document.getElementById('admin-pwd').value;
+    if (!email || !pwd) { loginError('Preencha o e-mail e a senha.'); return; }
+    const btn = document.getElementById('admin-login-btn');
+    btn.disabled = true; btn.textContent = 'Entrando...';
+    try {
+      await auth.signInWithEmailAndPassword(email, pwd);
+      document.getElementById('admin-pwd').value = '';
+      document.getElementById('pwd-error').style.display = 'none';
+      showAdminMain();
+    } catch (err) {
+      loginError(
+        ['auth/invalid-credential', 'auth/wrong-password', 'auth/user-not-found', 'auth/invalid-email']
+          .includes(err.code)
+          ? 'E-mail ou senha incorretos.'
+          : 'Não foi possível entrar: ' + err.message
+      );
+    } finally {
+      btn.disabled = false; btn.textContent = 'Entrar';
     }
+  }
+
+  async function logoutAdmin() {
+    await auth.signOut();
+    closeAdmin();
   }
 
   function selectSection(section, btn) {
@@ -1110,23 +1146,43 @@
     }
   }
 
-  function saveProducts(section, arr) {
-    _cache[section] = arr;
-    db.collection('catalogo').doc(section).set({ products: arr })
-      .catch(err => alert('Erro ao salvar no Firebase: ' + err.message));
-  }
+  // Cada produto é um documento próprio em catalogo/{id}: o teto de 1 MiB do
+  // Firestore passa a valer por produto, e não para o catálogo inteiro.
+  const DOC_LIMIT = 1048576;
 
-  function addProduct() {
+  async function addProduct() {
     const name = document.getElementById('p-name').value.trim();
     if (!name) { alert('Digite o nome do produto.'); return; }
+
+    const imgs = uploadedImages.filter(Boolean);
+    const peso = imgs.reduce((n, s) => n + s.length, 0);
+    if (peso > DOC_LIMIT * 0.9) {
+      alert('As fotos deste produto estão pesadas demais (' + Math.round(peso / 1024) + ' KB). Use menos fotos ou imagens menores.');
+      return;
+    }
+
+    const id = Date.now();
     const product = {
-      id: Date.now(),
+      id,
+      section: currentSection,
       brand: document.getElementById('p-brand').value.trim(),
       name,
       desc: document.getElementById('p-desc').value.trim(),
-      imgs: uploadedImages.filter(Boolean)
+      imgs
     };
-    saveProducts(currentSection, [..._cache[currentSection], product]);
+
+    const btn = document.getElementById('admin-add-btn');
+    btn.disabled = true; btn.textContent = 'Salvando...';
+    try {
+      await db.collection('catalogo').doc(String(id)).set(product);
+    } catch (err) {
+      alert(err.code === 'permission-denied'
+        ? 'Sem permissão para salvar. Faça login novamente.'
+        : 'Erro ao salvar no Firebase: ' + err.message);
+      return;
+    } finally {
+      btn.disabled = false; btn.textContent = '+ Adicionar';
+    }
 
     document.getElementById('p-brand').value = '';
     document.getElementById('p-name').value = '';
@@ -1139,13 +1195,17 @@
       document.getElementById('pimg-' + i).value = '';
       document.getElementById('pslot-' + i).classList.remove('filled');
     }
-    renderAdminList();
   }
 
-  function deleteProduct(section, id) {
+  async function deleteProduct(section, id) {
     if (!confirm('Remover este produto?')) return;
-    saveProducts(section, _cache[section].filter(p => p.id !== id));
-    renderAdminList();
+    try {
+      await db.collection('catalogo').doc(String(id)).delete();
+    } catch (err) {
+      alert(err.code === 'permission-denied'
+        ? 'Sem permissão para remover. Faça login novamente.'
+        : 'Erro ao remover: ' + err.message);
+    }
   }
 
   function renderAdminList() {
@@ -1234,12 +1294,17 @@
 
   // ─── SYNC FIRESTORE EM TEMPO REAL ────────────────────────────
   ['cadeiras', 'componentes'].forEach(section => {
-    db.collection('catalogo').doc(section).onSnapshot(doc => {
-      _cache[section] = doc.exists ? (doc.data().products || []) : [];
+    db.collection('catalogo').where('section', '==', section).onSnapshot(snap => {
+      _cache[section] = snap.docs
+        .map(d => d.data())
+        .sort((a, b) => (a.id || 0) - (b.id || 0));
+      try { localStorage.setItem('atce_' + section, JSON.stringify(_cache[section])); } catch (e) {}
       renderSection(section);
       if (document.getElementById('admin-main').style.display !== 'none') renderAdminList();
-    }, () => {
-      _cache[section] = JSON.parse(localStorage.getItem('atce_' + section) || '[]');
+    }, err => {
+      // Se o Firestore estiver inacessível, mostra a última cópia vista neste navegador.
+      console.error('Firestore indisponível (' + err.code + '), usando cache local.');
+      try { _cache[section] = JSON.parse(localStorage.getItem('atce_' + section) || '[]'); } catch (e) { _cache[section] = []; }
       renderSection(section);
     });
   });
